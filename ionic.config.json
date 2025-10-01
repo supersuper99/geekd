@@ -1,0 +1,7 @@
+{
+  "name": "geekd",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
