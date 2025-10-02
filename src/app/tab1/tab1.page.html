@@ -1,17 +1,87 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 1
+      Discover
     </ion-title>
+    <ion-buttons slot="end">
+      <!-- Toggle view: list/map -->
+      <ion-button (click)="toggleView()">
+        <ion-icon [name]="viewType === 'map' ? 'list' : 'map'"></ion-icon>
+      </ion-button>
+      <!-- Filters -->
+      <ion-button (click)="openFilters()">
+        <ion-icon name="filter"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Searchbar -->
+  <ion-toolbar>
+    <ion-searchbar
+      placeholder="Search by name, fandom, or keyword..."
+      [(ngModel)]="searchTerm"
+      (ionInput)="filterUsers()"
+      show-clear-button="focus"
+      debounce="300">
+    </ion-searchbar>
+  </ion-toolbar>
+
+  <!-- Quick Filters -->
+  <ion-toolbar>
+    <ion-segment scrollable="true" [(ngModel)]="quickFilter" (ionChange)="applyQuickFilter()">
+      <ion-segment-button value="all">
+        <ion-label>All</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="anime">
+        <ion-label>Anime</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="ttrpg">
+        <ion-label>TTRPG</ionlabel>
+      </ion-segment-button>
+      <ion-segment-button value="gaming">
+        <ion-label>Gaming</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="cosplay">
+        <ion-label>Cosplay</ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- Card Feed -->
+  <ion-card *ngFor="let user of filteredUsers">
+    <ion-img [src]="user.photoUrl || 'assets/default-avatar.png'"></ion-img>
+    <ion-card-header>
+      <ion-card-title>{{ user.displayName }}</ion-card-title>
+      <ion-card-subtitle>
+        {{ user.pronouns }} · {{ user.age }} · {{ user.city }}
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-chip *ngFor="let interest of user.topInterests">
+        <ion-label>{{ interest }}</ion-label>
+      </ion-chip>
+      <p>{{ user.bio }}</p>
+    </ion-card-content>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+    <!-- Action Buttons -->
+    <ion-row class="ion-justify-content-around ion-padding">
+      <ion-col size="4">
+        <ion-button expand="block" color="medium" (click)="pass(user)">
+          <ion-icon slot="icon-only" name="close"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col size="4">
+        <ion-button expand="block" color="primary" (click)="like(user)">
+          <ion-icon slot="icon-only" name="heart"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col size="4">
+        <ion-button expand="block" color="tertiary" (click)="superLike(user)">
+          <ion-icon slot="icon-only" name="star"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-card>
 </ion-content>
